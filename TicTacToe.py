@@ -1,6 +1,8 @@
 '''
 First attempt at tactical engine
-For this I will be using the simple game tic-tac-toe
+For this I will be using the simple game tic-tac-toe. The board will be
+represented by a 2D array, with empty spaces stored as 0, x stored as 1
+and o stored as 2
 Bennet Montgomery
 2017-11-12
 '''
@@ -24,52 +26,105 @@ def novice(boardState):
 
 '''
 Intermediate() function take the current boardState and returns adjusted boardState with move in place.
-If the AI notices a potential loss in the next turn, it blocks it. Otherwise, it plays randomly.
+If the AI notices a potential loss or win in the next turn, it blocks or takes it. Otherwise, it plays
+randomly.
 '''
 def intermediate(boardState):
+    #the AI will now prioritize winning over blocking - 2017-11-14
+    '''
+    Cases where the AI wins this turn:
+    '''
     for i in range(len(boardState)):
-        if boardState[i] == [0, 2, 2] or boardState[i] == [0, 1, 1]:
+        if boardState[i] == [0, 2, 2]:
             boardState[i][0] = 2
             return boardState
-        if boardState[i] == [2, 0, 2] or boardState[i] == [1, 0, 1]:
+        if boardState[i] == [2, 0, 2]:
             boardState[i][1] = 2
             return boardState
-        if boardState[i] == [2, 2, 0] or boardState[i] == [1, 1, 0]:
+        if boardState[i] == [2, 2, 0]:
+            boardState[i][2] = 2
+
+    for i in range(len(boardState[0])):
+        if boardState[0][i] == boardState[1][i] and boardState[2][i] == 0 and boardState[0][i] == 2:
+            boardState[2][i] = 2
+            return boardState
+        if boardState[0][i] == boardState[2][i] and boardState[1][i] == 0 and boardState[0][i] == 2:
+            boardState[1][i] = 2
+            return boardState
+        if boardState[1][i] == boardState[2][i] and boardState[0][i] == 0 and boardState[1][i] == 2:
+            boardState[0][i]= 2
+            return boardState
+
+    if boardState[0][0] == boardState[1][1] and boardState[2][2] == 0 and boardState[0][0] == 2:
+        boardState[2][2] = 2
+        return boardState
+
+    if boardState[0][0] == boardState[2][2] and boardState[1][1] == 0 and boardState[0][0] == 2:
+        boardState[1][1] = 2
+        return boardState
+
+    if boardState[1][1] == boardState[2][2] and boardState[0][0] == 0 and boardState[1][1] == 2:
+        boardState[0][0] = 2
+        return boardState
+
+    if boardState[0][2] == boardState[1][1] and boardState[2][0] == 0 and boardState[0][2] == 2:
+        boardState[2][0] = 2
+        return boardState
+
+    if boardState[0][2] == boardState[2][0] and boardState[1][1] == 0 and boardState[0][2] == 2:
+        boardState[1][1] = 2
+        return boardState
+
+    if boardState[1][1] == boardState[2][0] and boardState[0][2] == 0 and boardState[1][1] == 2:
+        boardState[0][2] = 2
+        return boardState
+
+    '''
+    Cases where the AI loses this turn:
+    '''
+    for i in range(len(boardState)):
+        if  boardState[i] == [0, 1, 1]:
+            boardState[i][0] = 2
+            return boardState
+        if boardState[i] == [1, 0, 1]:
+            boardState[i][1] = 2
+            return boardState
+        if boardState[i] == [1, 1, 0]:
             boardState[i][2] = 2
             return boardState
 
     for i in range(len(boardState[0])):
-        if boardState[0][i] == boardState[1][i] and boardState[2][i] == 0:
+        if boardState[0][i] == boardState[1][i] and boardState[2][i] == 0 and boardState[0][i] == 1:
             boardState[2][i] = 2
             return boardState
-        if boardState[0][i] == boardState[2][i] and boardState[1][i] == 0:
+        if boardState[0][i] == boardState[2][i] and boardState[1][i] == 0 and boardState[0][i] == 1:
             boardState[1][i] = 2
             return boardState
-        if boardState[1][i] == boardState[2][i] and boardState[0][i] == 0:
+        if boardState[1][i] == boardState[2][i] and boardState[0][i] == 0 and boardState[0][i] == 1:
             boardState[0][i]= 2
             return boardState
 
-    if boardState[0][0] == boardState[1][1] and boardState[2][2] == 0:
+    if boardState[0][0] == boardState[1][1] and boardState[2][2] == 0 and boardState[0][0] == 1:
         boardState[2][2] = 2
         return boardState
 
-    if boardState[0][0] == boardState[2][2] and boardState[1][1] == 0:
+    if boardState[0][0] == boardState[2][2] and boardState[1][1] == 0 and boardState[0][0] == 1:
         boardState[1][1] = 2
         return boardState
 
-    if boardState[1][1] == boardState[2][2] and boardState[0][0] == 0:
+    if boardState[1][1] == boardState[2][2] and boardState[0][0] == 0 and boardState[1][1] == 1:
         boardState[0][0] = 2
         return boardState
 
-    if boardState[0][2] == boardState[1][1] and boardState[2][0] == 0:
+    if boardState[0][2] == boardState[1][1] and boardState[2][0] == 0 and boardState[0][2] == 1:
+        boardState[2][0] = 2
+        return boardState
+
+    if boardState[0][2] == boardState[2][0] and boardState[1][1] == 0 and boardState[0][2] == 1:
         boardState[1][1] = 2
         return boardState
 
-    if boardState[0][2] == boardState[2][0] and boardState[1][1] == 0:
-        boardState[1][1] = 2
-        return boardState
-
-    if boardState[1][1] == boardState[2][0] and boardState[0][2] == 0:
+    if boardState[1][1] == boardState[2][0] and boardState[0][2] == 0 and boardState[1][1] == 1:
         boardState[0][2] = 2
         return boardState
             
@@ -128,13 +183,19 @@ def checkWin(boardState):
     return False or full
 
 '''
-PrintBoard() prints the current state of the board
+PrintBoard() prints the current state of the board, substituting 0, 1, and 2
+for -, x, and o respectively
 '''
 def printBoard(boardState):
     for i in range(len(boardState)):
         lineString = ''
         for j in range(len(boardState[i])):
-            lineString += str(boardState[i][j])
+            if boardState[i][j] == 0:
+                lineString += '-'
+            elif boardState[i][j] == 1:
+                lineString += 'x'
+            else:
+                lineString += 'o'
 
         print(lineString)
 
@@ -172,3 +233,19 @@ def game(ai):
         opening = False
         gameWon = checkWin(boardState)
         printBoard(boardState)
+
+'''
+main() function prompts user for diffiulty setting and starts the game loop
+'''
+def main():
+    difficulty = input('difficulty: ')
+    if difficulty == 'novice':
+        game('novice')
+    elif difficulty == 'intermediate':
+        game('intermediate')
+    elif difficulty == 'expert':
+        game('expert')
+    else:
+        main()
+
+if __name__ == '__main__':main()
